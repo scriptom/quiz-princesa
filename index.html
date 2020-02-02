@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>¿Qué tan pricnesa eres?</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<style type="text/css">
+		main {
+			background: #eee;
+			min-height: 100vh;
+		}
+		.pregunta {
+			font-size: 1.2em;
+			font-weight: bold;
+		}
+		.progress {
+		background: #ccc;
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 offset-md-3 p-4" id="app-container">
+					<h1 class="text-center display-4 m-4" id="main-title">¿Qué tan princesa eres?</h1>
+					<div id="container-preguntas"></div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<template id="template-preguntas">
+		<div class="list-group" id="lista-preguntas">
+			<div class="list-group-item pregunta"></div>
+			<a class="list-group-item list-group-item-action" data-toggle="list" href="#" data-respuesta="Si" onclick="responder(this)">Sí</a>
+			<a class="list-group-item list-group-item-action" data-toggle="list" href="#" data-respuesta="No" onclick="responder(this)">No</a>
+		</div>
+	</template>
+	<template id="template-final">
+		<div class="card p-5">
+			<h3 class="text-center card-title">Tu nivel de princesa es:</h3>
+			<div class="card-body">
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+				</div>
+			</div>
+		</div>
+	</template>
+	<script type="text/javascript">
+		window.preguntas = [
+			{
+				"text": "¿Tu novio o algun ex te estuvo cayendo por 3 meses antes de que aceptaras?",
+			},
+			{
+				"text": "¿Tu novio o ex se siente comodo diciendo disparates en tu presencia?",
+			},
+			{
+				"text": "¿Alguna vez has negado un beso en tu primera cita porque sientes que deben ganarselos?",
+			},
+			{
+				"text": "¿Quieres que tus amigos hombres tengan una conversacion de machos con tu cuadre a ver si va en serio contigo?",
+			},
+			{
+				"text": "¿Consideras que tu amor es un premio que se tienen que ganar tus pretendientes?",
+			},
+			{
+				"text": "¿Consideras que si alguien te cae debe ser un principe azul?",
+			}
+		];
+
+
+		function iniciarJuego() {
+			window.preguntaActual = 0;
+			window.puntaje = 0;
+			colocarPregunta(window.preguntaActual);
+		}
+
+		function colocarPregunta(p) {
+			if (p < window.preguntas.length) {
+				const template = document.querySelector('#template-preguntas');
+				const pregunta = template.content.querySelector('.pregunta');
+				const texto = `${p +1}. ${window.preguntas[p].text}`;
+
+				pregunta.innerHTML = texto;
+
+				const node = document.importNode(template.content, true);
+				const c = document.getElementById('container-preguntas');
+				if (null === c.firstElementChild) {
+					c.appendChild(node);
+				} else {
+					c.firstElementChild.replaceWith(node);
+				}
+			} else {
+				finalizar();
+			}
+		}
+
+		function finalizar() {
+			const porcentaje = (puntaje/preguntas.length) * 100;
+			const final = document.getElementById('template-final');
+			const bar = final.content.querySelector('.progress-bar');
+			bar.style.width = `${porcentaje}%`;
+			bar.innerHTML = `${porcentaje}%`;
+			bar.setAttribute("aria-valuenow", porcentaje);
+			const node = document.importNode(final.content, true);
+			document.getElementById('container-preguntas').firstElementChild.replaceWith(node);
+		}
+
+		function responder(el) {
+			if ("Si" === el.dataset.respuesta) {
+				window.puntaje++;
+			}
+
+			window.preguntaActual++;
+			colocarPregunta(window.preguntaActual);
+		}
+
+		document.addEventListener('DOMContentLoaded', () => {
+			iniciarJuego();
+		})
+	</script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>	
+</body>
+</html>
